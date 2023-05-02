@@ -1,16 +1,13 @@
 import PropTypes from 'prop-types';
-
 import css from './FeedbackOptions.module.css';
 
 //<FeedbackOptions options={} onLeaveFeedback={}>
-//TODO: array of buttons obj as props
-export const FeedbackOptions = ({
-  handleClick
-}) => {
+
+export const FeedbackOptions = ({ onLeaveFeedback }) => {
   return (
     <div className={css.container}>
       <button
-        onClick={handleClick}
+        onClick={onLeaveFeedback}
         type="button"
         className={css.feedbackBtn}
         id="good"
@@ -18,7 +15,7 @@ export const FeedbackOptions = ({
         Good
       </button>
       <button
-        onClick={handleClick}
+        onClick={onLeaveFeedback}
         type="button"
         className={css.feedbackBtn}
         id="neutral"
@@ -26,7 +23,7 @@ export const FeedbackOptions = ({
         Neutral
       </button>
       <button
-        onClick={handleClick}
+        onClick={onLeaveFeedback}
         type="button"
         className={css.feedbackBtn}
         id="bad"
@@ -38,5 +35,5 @@ export const FeedbackOptions = ({
 };
 
 FeedbackOptions.propTypes = {
-  handleClick: PropTypes.func.isRequired,
+  onLeaveFeedback: PropTypes.func.isRequired,
 };

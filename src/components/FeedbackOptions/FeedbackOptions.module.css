@@ -1,11 +1,25 @@
-.feedbackBtn {
-  background-color: rgb(255, 251, 0);
-  border-radius: 4px;
-}
-
 .container {
   padding-left: 20px;
   display:flex;
   gap: 20px;
 }
+
+.feedbackBtn {
+ /* background-color: rgb(255, 251, 0); */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px #777;
+}
+
+button[id=good] {
+  background-color: rgb(118, 212, 118);
+}
+
+button[id=neutral] {
+  background-color: rgb(246, 246, 81);
+}
+
+button[id=bad]  {
+  background-color: rgb(238, 128, 128);
+}
+
 
