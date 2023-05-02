@@ -4,8 +4,11 @@
   gap: 20px;
 }
 
+li {
+  list-style: none;
+}
+
 .feedbackBtn {
- /* background-color: rgb(255, 251, 0); */
   border-radius: 4px;
   box-shadow: 0 2px 4px #777;
 }

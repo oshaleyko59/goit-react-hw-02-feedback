@@ -5,6 +5,8 @@ import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Notification } from './Notification/Notification';
 
 export class App extends Component {
+  //static defaultProps = {};  //options;
+
   state = {
     good: 0,
     neutral: 0,
@@ -35,11 +37,13 @@ export class App extends Component {
   };
 
   render() {
+    console.log('props:', this.props.options);
     const total = this.countTotalFeedback();
+
     return (
       <div>
         <SectionTitle title="Please leave feedback">
-          <FeedbackOptions onLeaveFeedback={this.handleClick} />
+          <FeedbackOptions options={this.props.options}  onLeaveFeedback={this.handleClick} />
         </SectionTitle>
         <SectionTitle title="Statistics">
           {total !== 0 ? (
