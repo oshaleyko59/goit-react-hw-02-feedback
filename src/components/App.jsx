@@ -1,58 +1,91 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 import { SectionTitle } from './SectionTitle/SectionTitle';
 import { Statistics } from './Statistics/Statistics';
 import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
 import { Notification } from './Notification/Notification';
 
 export class App extends Component {
-  //static defaultProps = {};  //options;
-
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  static defaultProps = {
+    options: [
+      { id: 'good', label: 'Good' },
+      { id: 'bad', label: 'Bad' },
+    ],
   };
 
-  countTotalFeedback() {
-    return this.state.good + this.state.neutral + this.state.bad;
-  }
+  static propTypes = {
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+      })
+    ),
+  };
 
-  countPositiveFeedbackPercentage(base) {
-    return Math.round((this.state.good * 100) / base);
-  }
+  state = this.props.options.reduce((acc, opt) => {
+    acc[opt.id] = 0;
+    return acc;
+  }, {});
 
-  handleClick = evt => {
-    this.setState(prevState => {
-      switch (evt.target.id) {
-        case 'good':
-          return { good: prevState.good + 1 };
-        case 'neutral':
-          return { neutral: prevState.neutral + 1 };
-        case 'bad':
-          return { bad: prevState.bad + 1 };
-        default:
-          return {};
-      }
+  countPercentage = (key, base) => {
+    return Math.round((this.state[key] * 100) / base);
+  };
+
+  handleClick = ({ target: { id } }) => {
+    this.setState(prevState => ({ [id]: prevState[id] + 1 }));
+  };
+
+  countTotal = () => {
+    return Object.values(this.state).reduce((acc, i) => acc + i, 0);
+  };
+
+  getCount = id => {
+    return this.state[id];
+  };
+
+  idTotal = nanoid();
+  idPositivePercent = nanoid();
+
+  getCategories = () => {
+    const {
+      getCount,
+      idTotal,
+      countTotal,
+      idPositivePercent,
+      countPercentage,
+      props: { options },
+    } = this;
+    const total = countTotal();
+    let categories = options.map(option => ({
+      ...option,
+      value: getCount(option.id),
+    }));
+    categories.push({ id: idTotal, label: 'Total', value: total });
+    categories.push({
+      id: idPositivePercent,
+      label: 'Positive feedback(%)',
+      value: countPercentage('good', total),
     });
+    return categories;
   };
 
   render() {
-    const total = this.countTotalFeedback();
+    const {
+      countTotal,
+      getCategories,
+      handleClick,
+      props: { options },
+    } = this;
 
     return (
       <div>
         <SectionTitle title="Please leave feedback">
-          <FeedbackOptions options={this.props.options}  onLeaveFeedback={this.handleClick} />
+          <FeedbackOptions options={options} onLeaveFeedback={handleClick} />
         </SectionTitle>
         <SectionTitle title="Statistics">
-          {total !== 0 ? (
-            <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={total}
-              positivePercentage={this.countPositiveFeedbackPercentage(total)}
-            />
+          {countTotal() !== 0 ? (
+            <Statistics categories={getCategories()} />
           ) : (
             <Notification message="There is no feedback" />
           )}
@@ -61,4 +94,3 @@ export class App extends Component {
     );
   }
 }
-
